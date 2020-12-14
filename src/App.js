@@ -1,14 +1,14 @@
-import React from 'react';
-import './App.css';
+import React from "react";
+import AppPage from "./components/AppPage";
+import "./App.css";
+import "./utils/css/styles.css";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-     <h1>
-       HEllo
-     </h1>
+      <AppPage></AppPage>
     </div>
   );
-}
+};
 
 export default App;
