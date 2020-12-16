@@ -8,7 +8,7 @@ const INITIAL_STATE = {
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case actionTypes.FETCH_WEATHER:
+    case actionTypes.FETCH_WEATHER_REQUEST:
       return {
         ...state,
         isFetching: true,

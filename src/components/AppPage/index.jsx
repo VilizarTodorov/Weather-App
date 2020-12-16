@@ -1,6 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { fetchWeather } from "../../redux/actions";
+import { fetchForecast, clearForecast } from "../../redux/forecast/actions";
+import { fetchWeather } from "../../redux/weather/actions";
+import ForecastEntry from "../ForecastEntry";
 import "./styles.css";
 
 const INITIAL_STATE = {
@@ -22,6 +24,12 @@ class AppPage extends React.Component {
     event.preventDefault();
     const { city, country } = this.state;
     this.props.fetchWeather(city, country);
+    this.props.clearForecast();
+  };
+
+  getForecast = () => {
+    const { lat, lon } = this.props.weather.coord;
+    this.props.fetchForecast(lat, lon);
   };
 
   dateBuilder = (dt) => {
@@ -51,96 +59,129 @@ class AppPage extends React.Component {
 
   render() {
     const { city, country } = this.state;
-    const main = this.props.weather ? this.props.weather.main : null;
-    const name = this.props.weather ? this.props.weather.name : "";
-    const dt = this.props.weather ? this.props.weather.dt : "";
-    const weather = this.props.weather ? this.props.weather.weather[0].main : "";
-    const temp = main ? Math.round(main.temp) : "";
-    const min = main ? Math.round(main.temp_min) : "";
-    const max = main ? Math.round(main.temp_max) : "";
-
     return (
-      <div className={`App-page ${temp > 15 ? "warm" : "cold"}-weather`}>
-        <main className="app-main">
-          <form className="page-form" onSubmit={this.onSubmit}>
-            <div className="search-container">
-              <input
-                className="search-bar"
-                name="city"
-                type="text"
-                placeholder="City"
-                value={city}
-                onChange={this.onChange}
-                autoComplete="off"
-                required
-              />
-              <input
-                className="search-bar"
-                name="country"
-                type="text"
-                placeholder="Country"
-                value={country}
-                onChange={this.onChange}
-                autoComplete="off"
-                required
-              />
-            </div>
-            <button
-              className={`submit-button ${this.props.isFetching ? "disabled" : ""}`}
-              disabled={this.props.isFetching}
-              type="submit"
-            >
-              {`Get${this.props.isFetching ? "ting" : ""} Weather`}
-            </button>
-          </form>
-          <section className="info-container">
-            <div className="location-container">
-              <h1 className="location">{name}</h1>
-              <div className="date">{dt && this.dateBuilder(dt)}</div>
-            </div>
-            <div className="weather-info-container">
-              <div className="weather-conditions">
-                <h1 className="current-temperature">{temp}°c</h1>
-                <p className="condition">{weather}</p>
-                <div className="min-max-temps">
-                  <p className="min-temp">{min}°c</p>
-                  <p>/</p>
-                  <p className="max-temp">{max}°c</p>
+      <Fragment>
+        {!this.props.weather ? (
+          <div className="App-page">
+            <main className="app-main initial">
+              <form className="page-form" onSubmit={this.onSubmit}>
+                <div className="search-container">
+                  <input
+                    className="search-bar"
+                    name="city"
+                    type="text"
+                    placeholder="City"
+                    value={city}
+                    onChange={this.onChange}
+                    autoComplete="off"
+                    required
+                  />
+                  <input
+                    className="search-bar"
+                    name="country"
+                    type="text"
+                    placeholder="Country"
+                    value={country}
+                    onChange={this.onChange}
+                    autoComplete="off"
+                    required
+                  />
                 </div>
-              </div>
-              <div className="forecast">
-                <div className="day">
-                  <p>icon</p>
-                  <p>today</p>
+                <button
+                  className={`submit-button ${this.props.isFetching ? "disabled" : ""}`}
+                  disabled={this.props.isFetching}
+                  type="submit"
+                >
+                  {`Get${this.props.isFetching ? "ting" : ""} Weather`}
+                </button>
+              </form>
+            </main>
+          </div>
+        ) : (
+          <div className={`App-page ${this.props.weather.main.temp > 15 ? "warm" : "cold"}-weather`}>
+            <main className="app-main">
+              <form className="page-form" onSubmit={this.onSubmit}>
+                <div className="search-container">
+                  <input
+                    className="search-bar"
+                    name="city"
+                    type="text"
+                    placeholder="City"
+                    value={city}
+                    onChange={this.onChange}
+                    autoComplete="off"
+                    required
+                  />
+                  <input
+                    className="search-bar"
+                    name="country"
+                    type="text"
+                    placeholder="Country"
+                    value={country}
+                    onChange={this.onChange}
+                    autoComplete="off"
+                    required
+                  />
                 </div>
-                <div className="day">
-                  <p>icon</p>
-                  <p>today</p>
+                <button
+                  className={`submit-button ${this.props.isFetching ? "disabled" : ""}`}
+                  disabled={this.props.isFetching}
+                  type="submit"
+                >
+                  {`Get${this.props.isFetching ? "ting" : ""} Weather`}
+                </button>
+              </form>
+              <section className="info-container">
+                <div className="location-container">
+                  <h1 className="location">{this.props.weather.name}</h1>
+                  <div className="date">{this.props.weather.dt && this.dateBuilder(this.props.weather.dt)}</div>
                 </div>
-                <div className="day">
-                  <p>icon</p>
-                  <p>today</p>
+                <div className="weather-info-container">
+                  <div className="weather-conditions">
+                    <h1 className="current-temperature">{Math.round(this.props.weather.main.temp)}°c</h1>
+                    <p className="condition">{this.props.weather.weather[0].main}</p>
+                    <div className="min-max-temps">
+                      <p className="min-temp">{Math.round(this.props.weather.main.temp_min)}°c</p>
+                      <p>/</p>
+                      <p className="max-temp">{Math.round(this.props.weather.main.temp_max)}°c</p>
+                    </div>
+                  </div>
+                  {!this.props.forecast ? (
+                    <button className="submit-button" onClick={this.getForecast}>
+                      Get Forecast
+                    </button>
+                  ) : (
+                    <ul className="forecast">
+                      {this.props.forecast.daily.slice(0, 3).map((x, index) => (
+                        <ForecastEntry key={index} icon={x.weather[0].icon} dt={x.dt} temp={x.temp.day}></ForecastEntry>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              </div>
-            </div>
-          </section>
-        </main>
-      </div>
+              </section>
+            </main>
+          </div>
+        )}
+      </Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    isFetching: state.isFetching,
-    weather: state.weather,
-    error: state.error,
+    isFetching: state.weather.isFetching,
+    weather: state.weather.weather,
+    error: state.weather.error,
+    forecast: state.forecast.forecast,
+    state,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    clearForecast: () => dispatch(clearForecast()),
     fetchWeather: (city, country) => dispatch(fetchWeather(city, country)),
+    fetchForecast: (lat, lon) => dispatch(fetchForecast(lat, lon)),
   };
 };
 

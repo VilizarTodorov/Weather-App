@@ -1,0 +1,14 @@
+.forecast-entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.icon {
+  height: 39px;
+  width: 71px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
