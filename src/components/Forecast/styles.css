@@ -8,3 +8,9 @@
 .forecast li {
   list-style: none;
 }
+
+@media (max-width: 241px) {
+  .forecast {
+    width: auto;
+  }
+}

@@ -31,3 +31,9 @@
   display: flex;
   justify-content: space-around;
 }
+
+@media(max-width:241px){
+  .current-temperature{
+    font-size: 50px;
+  }
+}
