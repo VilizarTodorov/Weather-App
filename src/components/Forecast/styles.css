@@ -1,0 +1,10 @@
+.forecast {
+  font-size: 14px;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.forecast li {
+  list-style: none;
+}

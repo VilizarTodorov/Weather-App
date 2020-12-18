@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { clearForecast } from "../../redux/forecast/actions";
 import { fetchWeather } from "../../redux/weather/actions";
+import './styles.css'
 
 const INITIAL_STATE = {
   city: "",

@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import ForecastEntry from "../ForecastEntry";
 import { connect } from "react-redux";
 import { fetchForecast } from "../../redux/forecast/actions";
+import "./styles.css";
 
 const Forecast = (props) => {
   const getForecast = () => {
@@ -29,7 +30,7 @@ const Forecast = (props) => {
 const mapStateToProps = (state) => {
   return {
     forecast: state.forecast.forecast,
-    weather:state.weather.weather
+    weather: state.weather.weather,
   };
 };
 
